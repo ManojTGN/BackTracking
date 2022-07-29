@@ -10,49 +10,49 @@ void print(int *board, int n){
         for (int y = 0; y < n; y++) cout<<*(board + x * n + y)<<" ";
         cout<<endl;
     }
-    
 }
 
 bool canPlace(int *board, int n, int x, int y){
-
+    
+    int r,c;
     //Checking The Rows
-    for(int r = 0; r < n; r++){
+    for(r = 0; r < n; r++){
         if(*(board + r * n + y) == 1) return false;
     }
 
     //Checking The Columns
-    for(int c = 0; c < n; c++){
+    for(c = 0; c < n; c++){
         if(*(board + x * n + c) == 1) return false;
-    }
-
-    //Diagonal Upward Left
-    int r = x;int c = y;
-    while( r>=0 && c>=0 ){
-        if(*(board + r*n + c) == 1) return false;
-        r--;c--;
     }
 
     //Diagonal Upward Right
     r = x;c = y;
     while( r<n && c>=0 ){
-        if(*(board + r*n + c) == 1) return false;
-        r++;c--;
+        if(*(board + r * n + c) == 1) return false;
+        r+=1;c-=1;
     }
 
-    //Diagonal DownWard Left
+    //Diagonal Upward Left
     r = x;c = y;
-    while( r>=0 && c<n ){
-        if(*(board + r*n + c) == 1) return false;
-        r--;c++;
+    while( r>=0 && c>=0 ){
+        if(*(board + r * n + c) == 1) return false;
+        r-=1;c-=1;
     }
-
+ 
     //Diagonal Downward Right
     r = x;c = y;
     while( r<n && c<n ){
-        if(*(board + r*n + c) == 1) return false;
-        r++;c++;
+        if(*(board + r * n + c) == 1) return false;
+        r+=1;c+=1;
     }
 
+    //Diagonal Downward Left
+    r = x;c = y;
+    while( r>=0 && c<n ){
+        if(*(board + r * n + c) == 1) return false;
+        r-=1;c+=1;
+    }
+    
     //If No Queen Attacks At (x,y) Then Return True
     return true;
 }
@@ -68,7 +68,6 @@ bool nqueen(int *board, int n, int placed = 0){
     //BackTracking Method
     for(int x = 0; x < n; x++){
         for(int y = 0; y < n; y++){
-
             //Checking If Can Queen Be Placed At (x,y)
             if(canPlace(board, n, x, y)){
                 
@@ -76,7 +75,7 @@ bool nqueen(int *board, int n, int placed = 0){
                 //Increasing The Number Of Queens Placed By 1
                 *(board + x * n + y) = 1;
                 placed +=1;
-
+                
                 //Calling NQueen Function Again To Place The Next Queen
                 if(nqueen(board,n,placed) == true)
                     //It Is Only Triggered When All Queens Are Placed In The Right Place
