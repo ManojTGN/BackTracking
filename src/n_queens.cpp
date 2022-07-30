@@ -2,93 +2,88 @@
 
 using namespace std;
 
-
-void print(int *board, int n){
-
+void print(int **Board, int n){
     //Just Printing The Board
     for (int x = 0; x < n; x++){
-        for (int y = 0; y < n; y++) cout<<*(board + x * n + y)<<" ";
+        for (int y = 0; y < n; y++) cout<<Board[x][y]<<" ";
         cout<<endl;
-    }
+    }cout<<endl;
 }
 
-bool canPlace(int *board, int n, int x, int y){
-    
-    int r,c;
-    //Checking The Rows
+bool canPlace(int **Board, int n, int x, int y){
+    int r = 0;int c = 0;
+    //Row Checker
     for(r = 0; r < n; r++){
-        if(*(board + r * n + y) == 1) return false;
+        if(Board[x][r] == 1) return false;
     }
 
-    //Checking The Columns
+    //Column Checker
     for(c = 0; c < n; c++){
-        if(*(board + x * n + c) == 1) return false;
-    }
-
-    //Diagonal Upward Right
-    r = x;c = y;
-    while( r<n && c>=0 ){
-        if(*(board + r * n + c) == 1) return false;
-        r+=1;c-=1;
+        if(Board[c][y] == 1) return false;
     }
 
     //Diagonal Upward Left
     r = x;c = y;
-    while( r>=0 && c>=0 ){
-        if(*(board + r * n + c) == 1) return false;
-        r-=1;c-=1;
+    while( r >= 0 && c >= 0 ) {
+        if(Board[r][c] == 1) return false;
+        r--;c--;
     }
- 
-    //Diagonal Downward Right
+
+    //Diagonal Upward Right
     r = x;c = y;
-    while( r<n && c<n ){
-        if(*(board + r * n + c) == 1) return false;
-        r+=1;c+=1;
+    while( r >= 0 && c < n ) {
+        if(Board[r][c] == 1) return false;
+        r--;c++;
     }
 
     //Diagonal Downward Left
     r = x;c = y;
-    while( r>=0 && c<n ){
-        if(*(board + r * n + c) == 1) return false;
-        r-=1;c+=1;
+    while( r < n && c >= 0 ) {
+        if(Board[r][c] == 1) return false;
+        r++;c--;
+    }
+
+    //Diagonal Downward Right
+    r = x;c = y;
+    while( r < n && c < n ) {
+        if(Board[r][c] == 1) return false;
+        r++;c++;
     }
     
     //If No Queen Attacks At (x,y) Then Return True
     return true;
 }
 
-bool nqueen(int *board, int n, int placed = 0){
+bool nqueen(int **Board, int n, int placed = 0){
 
     //Checking If All n Queens Are Placed
     if(placed == n){
-        print(board,n);
+        print(Board,n);
         return true;
     }
 
     //BackTracking Method
     for(int x = 0; x < n; x++){
         for(int y = 0; y < n; y++){
+            
             //Checking If Can Queen Be Placed At (x,y)
-            if(canPlace(board, n, x, y)){
+            if(canPlace(Board, n, x, y)){
                 
                 //Placing The Queen At (x,y)
-                //Increasing The Number Of Queens Placed By 1
-                *(board + x * n + y) = 1;
-                placed +=1;
-                
+                Board[x][y] = 1;
+
                 //Calling NQueen Function Again To Place The Next Queen
-                if(nqueen(board,n,placed) == true)
+                if(nqueen(Board,n,placed+1) == true)
                     //It Is Only Triggered When All Queens Are Placed In The Right Place
                     return true;
 
                 //*If The Above If Statement Returns False Then
                 //This Track is Not A Right One And We Should Undo The Board
                 
-                //Removing The Queen At (x,y) And QueensPlaced minus -1
-                *(board + x * n + y) = 0;
-                placed -= 1;
+                //Removing The Queen At (x,y)
+                Board[x][y] = 0;
             }
-
+            
         }
     }
 
@@ -99,19 +94,22 @@ bool nqueen(int *board, int n, int placed = 0){
 int main(){
 
     //Getting The Board Length (n)
-    int n;
-    cout<<"Enter (n):";cin>>n;
+    int n;cout<<"Enter (n):";cin>>n;
 
     //Creating A 2D Dynamic Array (board)
-    int* board = new int[n * n];
+    int** Board = new int*[n];
     for (int x = 0; x < n; x++){
-        for (int y = 0; y < n; y++) *(board + x * n + y) = 0;
+        Board[x] = new int[n];
+        for (int y = 0; y < n; y++) Board[x][y] = 0;
     }
 
     //Calling The N-Queen Function
-    nqueen(board,n);
+    nqueen(Board,n);
 
     //Deleting The Pointers
-    delete[] board;
+    for (int i = 0; i < n; i++)delete[] Board[i]; 
+    delete[] Board;
+
     return 0;
+
 }
