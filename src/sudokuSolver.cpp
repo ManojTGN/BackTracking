@@ -1,5 +1,5 @@
 #include <iostream>
-#include <bits/stdc++.h>
+#include <stdlib.h>
 #define N 9
 
 using namespace std;
@@ -17,48 +17,95 @@ void print(int Board[N][N]){
 
 }
 
-list<int> getAvailable(int Board[N][N], int x, int y){
+bool canPlace(int Board[N][N], int x, int y, int n){
+    if(Board[x][y] != 0) return false;
 
-    list<int> Available = {1,2,3,4,5,6,7,8,9};
-    //Row Numbers
-    for(int i = 0; i < N; i++)
-        Available.remove(Board[x][i]);
-    //Column Numbers
-    for(int j = 0; j < N; j++)
-        Available.remove(Board[j][y]);
-    
-    return Available;
-
+    int gridx = (x/3)*3;int gridy = (y/3)*3;
+    for(int i = 0; i < N; i++){
+        if(Board[x][i] == n) return false;
+        if(Board[i][y] == n) return false;
+        
+        if(Board[gridx][gridy] == n) return false;
+        if((i+1)%3==0){gridx+=1;gridy-=2;}else{gridy+=1;}
+    }
+    return true;
 }
 
-void sudokuSolver(int Board[N][N], int x, int y){
-    list<int> Available = getAvailable(Board,x,y);
-    list<int>::iterator it;
-
+bool isEmptyAvailable(int Board[N][N]){
     for(int i = 0; i < N; i++){
         for(int j = 0; j < N; j++){
-            for (it = Available.begin(); it != Available.end(); it++){
-                
-            }
+            if(Board[i][j] == 0) return true;
         }
     }
+
+    return false;
+}
+
+bool sudokuSolver(int Board[N][N]){
+    if(!isEmptyAvailable(Board)) {
+        print(Board);
+        return true;
+    }
+        
+    for (int row = 0; row < N; row++){
+        for (int col = 0; col < N; col++){
+            if(Board[row][col] != 0) continue;
+
+            for(int i = 1; i <= N; i++){
+                if(canPlace(Board,row,col,i)){
+                    Board[row][col] = i;
+                    if(sudokuSolver(Board)) return true;
+                    Board[row][col] = 0;
+                }
+            }
+            
+            
+        }
+        system("CLS");
+        print(Board);
+
+    }
+        
+    return false;
 }
 
 int main(){
     int Board[N][N] = {
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0},
-        {0,0,0,0,0,0,0,0,0}
+        {5,0,0,3,0,6,0,0,0},
+        {0,0,0,0,5,4,7,3,0},
+        {0,9,0,0,0,0,0,0,6},
+        {0,5,0,8,0,0,9,6,0},
+        {3,0,0,0,4,0,0,0,0},
+        {7,8,0,0,0,0,1,0,3},
+        {9,0,1,0,7,0,0,0,0},
+        {2,0,6,4,9,8,3,0,5},
+        {8,0,5,1,0,3,2,9,7}
     };
-
-
-    sudokuSolver(Board,0,0);
-    print(Board);
+    
+    if(!sudokuSolver(Board)) cout<<"No Possible Solutions Were Found!"<<endl;
+    
     return 0;
 }
+/*
+EASY
+{5,0,0,3,0,6,0,0,0},
+{0,0,0,0,5,4,7,3,0},
+{0,9,0,0,0,0,0,0,6},
+{0,5,0,8,0,0,9,6,0},
+{3,0,0,0,4,0,0,0,0},
+{7,8,0,0,0,0,1,0,3},
+{9,0,1,0,7,0,0,0,0},
+{2,0,6,4,9,8,3,0,5},
+{8,0,5,1,0,3,2,9,7}
+
+HARD
+{4,0,6,1,0,0,0,0,3},
+{0,2,0,0,6,0,0,0,0},
+{0,9,0,0,0,0,4,0,0},
+{0,0,0,0,0,8,0,0,1},
+{0,4,0,0,0,0,0,0,0},
+{5,0,7,0,9,0,3,0,0},
+{0,0,0,9,0,0,0,7,0},
+{0,0,2,0,0,0,0,0,0},
+{6,0,3,0,7,0,5,0,0}
+*/
