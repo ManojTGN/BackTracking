@@ -31,10 +31,10 @@ bool canPlace(int Board[N][N], int x, int y, int n){
     return true;
 }
 
-bool isEmptyAvailable(int Board[N][N]){
-    for(int i = 0; i < N; i++){
-        for(int j = 0; j < N; j++){
-            if(Board[i][j] == 0) return true;
+bool isEmpty(int Board[N][N],int &row, int &col){
+    for(row = 0; row < N; row++){
+        for(col = 0; col < N; col++){
+            if(Board[row][col] == 0) return true;
         }
     }
 
@@ -42,30 +42,20 @@ bool isEmptyAvailable(int Board[N][N]){
 }
 
 bool sudokuSolver(int Board[N][N]){
-    if(!isEmptyAvailable(Board)) {
+    int row,col;
+    if(!isEmpty(Board,row,col)) {
         print(Board);
         return true;
     }
-        
-    for (int row = 0; row < N; row++){
-        for (int col = 0; col < N; col++){
-            if(Board[row][col] != 0) continue;
 
-            for(int i = 1; i <= N; i++){
-                if(canPlace(Board,row,col,i)){
-                    Board[row][col] = i;
-                    if(sudokuSolver(Board)) return true;
-                    Board[row][col] = 0;
-                }
-            }
-            
-            
+    for(int i = 1; i <= N; i++){
+        if(canPlace(Board,row,col,i)){
+            Board[row][col] = i;
+            if(sudokuSolver(Board)) return true;
+            Board[row][col] = 0;
         }
-        system("CLS");
-        print(Board);
-
     }
-        
+
     return false;
 }
 
