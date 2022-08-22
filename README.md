@@ -1,6 +1,3 @@
-<div id="top"></div>
-
-<!-- ABOUT THE PROJECT -->
 ## BackTracking
 
 Backtracking is a general algorithm for finding solutions to some computational problems, notably constraint satisfaction problems, that incrementally builds candidates to the solutions, and abandons a candidate ("backtracks") as soon as it determines that the candidate cannot possibly be completed to a valid solution.
@@ -11,24 +8,17 @@ Backtracking can be applied only for problems which admit the concept of a "part
 
 Backtracking depends on user-given "black box procedures" that define the problem to be solved, the nature of the partial candidates, and how they are extended into complete candidates. It is therefore a metaheuristic rather than a specific algorithm – although, unlike many other meta-heuristics, it is guaranteed to find all solutions to a finite problem in a bounded amount of time.
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- ROADMAP -->
 ## Roadmap
 
-- [ ] N-Queens Problem
-- [ ] Suduko Solver
+- [x] N-Queens Problem
+- [x] Suduko Solver
 - [ ] Stickers to spell word
-- [ ] Remove invalid parentheses
+- [x] Remove invalid parentheses
+- [ ] Maze Solver
 - [ ] Coming Soon
 
 See the [open issues](https://github.com/ManojTGN/BackTracking/issues) for a full list of proposed features (and known issues).
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -42,13 +32,7 @@ Don't forget to give the project a star! Thanks again!
 4. Push to the Branch 
 5. Open a Pull Request
 
-<p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
 Use this space to list resources you find helpful and would like to give credit to. I've included a few of my favorites to kick things off!
 * [Choose an Open Source License](https://choosealicense.com)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
