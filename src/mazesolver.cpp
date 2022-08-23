@@ -14,9 +14,7 @@ bool isFinishFound(int* playerPos,int* finishPos){
 
 void printMaze(int MAZE[N][N]){
 
-    int playerPos[2] = {-1,-1};
-    int finishPos[2] = {-1,-1};
-
+    system("CLS");
     for(int i=0;i<N+2;i++) cout<<"#";
     cout<<endl;
 
@@ -26,8 +24,8 @@ void printMaze(int MAZE[N][N]){
             if(MAZE[x][y] == 0) cout<<" ";
             else if(MAZE[x][y] == 1) cout<<"#";
             else if(MAZE[x][y] == 2) cout<<"*";
-            else if(MAZE[x][y] == 6) {cout<<"x";playerPos[0]=x;playerPos[1]=y;}
-            else if(MAZE[x][y] == 9) {cout<<"o";finishPos[0]=x;finishPos[1]=y;}
+            else if(MAZE[x][y] == 6) cout<<"x";
+            else if(MAZE[x][y] == 9) cout<<"o";
             else cout<<" ";
         }cout<<"#"<<endl;
     }
@@ -64,18 +62,11 @@ void getFinisher(int MAZE[N][N],int* FinsherPos){
     }
 }
 
-void moveTo(int MAZE[N][N],int* playerPos,char direction,int* storeNewPosTo){
-
-    MAZE[playerPos[0]][playerPos[1]] = 0;
-    int playerTmpPos[2] = {playerPos[0],playerPos[1]};
-
-    if(direction == 'U'){ playerTmpPos[0] -= 1; }
-    else if(direction == 'D'){ playerTmpPos[0] += 1;}
-    else if(direction == 'L'){ playerTmpPos[1] -= 1;}
-    else { playerTmpPos[1] +=1;}
-    
-    storeNewPosTo[0] = playerTmpPos[0];
-    storeNewPosTo[1] = playerTmpPos[1];
+void moveTo(int* playerPos,char direction){
+    if(direction == 'U'){ playerPos[0] -= 1; }
+    else if(direction == 'D'){ playerPos[0] += 1;}
+    else if(direction == 'L'){ playerPos[1] -= 1;}
+    else { playerPos[1] +=1;}
 }
 
 void getPlayerMoves(int MAZE[N][N], int* playerCurrentPos, bool* Direction){
@@ -128,21 +119,21 @@ void mazeSolver(int MAZE[N][N],int* FinishPos,int currentDepth,int* minDepth,boo
     for(int i = 0; i < 4; i++){
         if(!direction[i]) continue;
 
-        if(direction[i] && i == 0) moveTo(MAZE,playerPos,'U',playerTmpPos);
-        else if(direction[i] && i == 1) moveTo(MAZE,playerPos,'D',playerTmpPos);
-        else if(direction[i] && i == 2) moveTo(MAZE,playerPos,'L',playerTmpPos);
-        else if(direction[i] && i == 3) moveTo(MAZE,playerPos,'R',playerTmpPos);
-
-        MAZE[playerPos[0]][playerPos[1]] = 0;
+        playerTmpPos[0] = playerPos[0];playerTmpPos[1] = playerPos[1];
         MAZE[playerPos[0]][playerPos[1]] = 2;
-        MAZE[playerTmpPos[0]][playerTmpPos[1]] = 6;
-        
-        if(visualize){system("CLS");printMaze(MAZE);}
-        mazeSolver(MAZE,FinishPos,currentDepth+1,minDepth,visualize);
 
-        MAZE[playerTmpPos[0]][playerTmpPos[1]] = 0;
+        if(direction[i] && i == 0) moveTo(playerPos,'U');
+        else if(direction[i] && i == 1) moveTo(playerPos,'D');
+        else if(direction[i] && i == 2) moveTo(playerPos,'L');
+        else if(direction[i] && i == 3) moveTo(playerPos,'R');
+
         MAZE[playerPos[0]][playerPos[1]] = 6;
         
+        if(visualize)printMaze(MAZE);
+        mazeSolver(MAZE,FinishPos,currentDepth+1,minDepth,visualize);
+
+        MAZE[playerPos[0]][playerPos[1]] = 0;
+        MAZE[playerTmpPos[0]][playerTmpPos[1]] = 6;
     }
 }
 
@@ -159,14 +150,13 @@ int main(){
         {0,0,0,0,0,0,1,0,1,0},
         {0,0,0,0,0,0,1,0,0,0}
     };
-    
+    for(int x = 0; x < N; x++)for(int y = 0; y < N; y++)BESTMAZE[x][y] = MAZE[x][y];
+
     int minDepth = INT_MAX;
     int FinishPosition[2] = {-1,-1};
     getFinisher(MAZE,FinishPosition);
+    mazeSolver(MAZE,FinishPosition,0,&minDepth,false);
 
-    mazeSolver(MAZE,FinishPosition,0,&minDepth,true);
-
-    system("CLS");
     printMaze(BESTMAZE);
 
     return 0;
