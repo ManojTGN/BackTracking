@@ -1,8 +1,12 @@
 #include <iostream>
 #include <stdlib.h>
+#include <bits/stdc++.h>
+
 #define N 10
 
 using namespace std;
+
+int BESTMAZE[N][N];
 
 bool isFinishFound(int* playerPos,int* finishPos){
     return (playerPos[0] == finishPos[0]) && (playerPos[1] == finishPos[1]);
@@ -29,7 +33,7 @@ void printMaze(int MAZE[N][N]){
     }
 
     for(int i=0;i<N+2;i++) cout<<"#";
-    cout<<endl<<"playerPos:["<<playerPos[0]<<","<<playerPos[1]<<"] isFound:"<<isFinishFound(playerPos,finishPos)<<endl;
+    cout<<endl;
 }
 
 void getPlayer(int MAZE[N][N],int* PlayerPos){
@@ -74,7 +78,7 @@ void moveTo(int MAZE[N][N],int* playerPos,char direction,int* storeNewPosTo){
     storeNewPosTo[1] = playerTmpPos[1];
 }
 
-void getPlayerMoves(int MAZE[N][N], int* playerLastPos, int* playerCurrentPos, bool* Direction){
+void getPlayerMoves(int MAZE[N][N], int* playerCurrentPos, bool* Direction){
     //CHECKING UP
     if( 
         playerCurrentPos[0]-1 >= 0 && 
@@ -104,20 +108,22 @@ void getPlayerMoves(int MAZE[N][N], int* playerLastPos, int* playerCurrentPos, b
     ) Direction[3] = true;
 }
 
-bool mazeSolver(int MAZE[N][N],int* playerLastPosition,int* FinishPos){
+void mazeSolver(int MAZE[N][N],int* FinishPos,int currentDepth,int* minDepth,bool visualize=false){
 
     int playerPos[2] = {-1,-1};
     int playerTmpPos[2] = {-1,-1};
 
     getPlayer(MAZE,playerPos);
-    if(isFinishFound(playerPos,FinishPos)){
-        system("CLS");
-        printMaze(MAZE);
-        return true;
+    if(isFinishFound(playerPos,FinishPos) && currentDepth < *minDepth){
+        *minDepth = currentDepth;
+        for(int x = 0; x < N; x++)
+            for(int y = 0; y < N; y++)
+                BESTMAZE[x][y] = MAZE[x][y];
+        return;
     }
 
     bool direction[4] = {false,false,false,false};
-    getPlayerMoves(MAZE,playerLastPosition,playerPos,direction);
+    getPlayerMoves(MAZE,playerPos,direction);
 
     for(int i = 0; i < 4; i++){
         if(!direction[i]) continue;
@@ -131,39 +137,49 @@ bool mazeSolver(int MAZE[N][N],int* playerLastPosition,int* FinishPos){
         MAZE[playerPos[0]][playerPos[1]] = 2;
         MAZE[playerTmpPos[0]][playerTmpPos[1]] = 6;
         
-        system("CLS");
-        printMaze(MAZE);
-
-        if(mazeSolver(MAZE,playerPos,FinishPos)) return true;
+        if(visualize){system("CLS");printMaze(MAZE);}
+        mazeSolver(MAZE,FinishPos,currentDepth+1,minDepth,visualize);
 
         MAZE[playerTmpPos[0]][playerTmpPos[1]] = 0;
         MAZE[playerPos[0]][playerPos[1]] = 6;
         
     }
-
-    return false;
 }
 
 int main(){
     int MAZE[N][N]={
         {6,0,0,0,0,0,0,0,0,0},
-        {0,1,1,0,1,1,1,1,1,1},
-        {0,1,1,0,1,0,0,0,0,0},
-        {0,0,0,0,1,0,0,0,0,0},
-        {1,1,1,1,1,0,0,0,0,0},
-        {0,0,1,0,1,0,0,0,0,0},
-        {0,0,1,0,1,0,0,0,0,0},
-        {0,0,1,0,1,0,0,0,0,0},
-        {0,0,1,0,1,0,0,0,0,0},
-        {0,0,1,0,1,0,0,0,0,0}
+        {0,1,1,1,1,1,1,1,1,0},
+        {0,0,0,0,0,0,0,9,1,0},
+        {1,1,1,1,1,1,1,0,1,0},
+        {0,0,0,0,0,0,1,0,1,0},
+        {0,0,0,0,0,0,1,0,1,0},
+        {0,0,0,0,0,0,1,0,1,0},
+        {0,0,0,0,0,0,1,0,1,0},
+        {0,0,0,0,0,0,1,0,1,0},
+        {0,0,0,0,0,0,1,0,0,0}
     };
-
-    int FinishPosition[2] = {2,9};
-    int PlayerPosition[2] = {-1,-1};
-    getPlayer(MAZE,PlayerPosition);
+    
+    int minDepth = INT_MAX;
+    int FinishPosition[2] = {-1,-1};
     getFinisher(MAZE,FinishPosition);
 
-    mazeSolver(MAZE,PlayerPosition,FinishPosition);
+    mazeSolver(MAZE,FinishPosition,0,&minDepth,true);
+
+    system("CLS");
+    printMaze(BESTMAZE);
 
     return 0;
 }
+/*
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0},
+{0,0,0,0,0,0,0,0,0,0}
+*/
