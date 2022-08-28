@@ -12,10 +12,11 @@ Backtracking depends on user-given "black box procedures" that define the proble
 
 - [x] N-Queens Problem
 - [x] Suduko Solver
-- [ ] Stickers to spell word
 - [x] Remove invalid parentheses
-- [ ] Maze Solver
-- [ ] Coming Soon
+- [x] Maze Solver
+- [ ] TicTacToe Solver
+- [ ] Stickers to spell word
+- [x] Coming Soon
 
 See the [open issues](https://github.com/ManojTGN/BackTracking/issues) for a full list of proposed features (and known issues).
 
