@@ -1,10 +1,6 @@
-#include <iostream>
-#include <string>
-#include <stdlib.h>
+#include <stdio.h>
 
-using namespace std;
-
-bool isValid(string str){
+int isValid(char* str){
     if( str[0] == ')' || str[str.length()-1] == '(') return false;
 
     int status = 0;
@@ -15,10 +11,14 @@ bool isValid(string str){
     return 0 == status;
 }
 
-void removeParanthesis(string str, string &maxSolution){
-    
+void removeParanthesis(char* str, char* bestSolution){
+
     if(isValid(str)){
-        if(maxSolution.length() < str.length()) maxSolution = str;
+        if(bestSolutionLength < strLength) {
+            for(int i = 0; i < strLength;i++){
+                *str[i];
+            }
+        }
     }
     
     string temp;
@@ -34,11 +34,13 @@ void removeParanthesis(string str, string &maxSolution){
 
 }
 
-int main(){
-    string str = "()(()((((())";
-    string solution = "";
-    removeParanthesis(str,solution);
-    cout<<solution<<endl;
+void main(){
 
-    return 0;
+    char solution[12];
+    char str[12] = "()(()((((())";
+    for(int i = 0; i < 12; i++) solution[i] = str[i];
+
+    removeParanthesis(str,&solution);
+    printf("%s",solution);
+
 }
